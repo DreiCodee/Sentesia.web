@@ -30,8 +30,17 @@ h1,h2,h3,.fx{font-family:'Baloo 2','Nunito',system-ui,sans-serif}
 :focus-visible{outline:3px solid var(--honey);outline-offset:2px}
 /* splash */
 #splash{align-items:center;justify-content:center;gap:18px;background:linear-gradient(var(--honey2),var(--card))}
-.logo{font:800 46px/1 'Baloo 2',sans-serif;color:var(--blue);text-align:center;letter-spacing:-1px}
-.logo span{display:block;font-size:56px;margin-top:6px}
+.brand{display:flex;flex-direction:column;align-items:center}
+.logo{display:flex;font:800 66px/1 'Baloo 2',sans-serif;letter-spacing:-1px}
+.logo span{display:inline-block;color:var(--c);text-shadow:0 4px 0 #33402f22;rotate:calc((var(--i) - 4) * 1.6deg);animation:drop .7s cubic-bezier(.3,1.6,.5,1) backwards,hop 3.2s ease-in-out infinite;animation-delay:calc(var(--i) * .08s),calc(1.4s + var(--i) * .1s)}
+@keyframes drop{from{transform:translateY(-50px) scale(.4);opacity:0}}
+@keyframes hop{0%,55%,100%{transform:none}25%{transform:translateY(-10px)}}
+.under{position:relative;width:230px;height:30px}
+.squig{width:210px;height:20px}
+.squig path{fill:none;stroke:var(--honey);stroke-width:5;stroke-linecap:round;stroke-dasharray:260;stroke-dashoffset:260;animation:draw 1s .9s ease forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.pen{position:absolute;right:0;top:-14px;font-size:34px;animation:write 1.6s ease-in-out infinite;transform-origin:bottom left}
+@keyframes write{50%{transform:rotate(-14deg) translate(-4px,4px)}}
 .book{font-size:64px;animation:bob 2s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-10px) rotate(-4deg)}}
 .load{width:150px;height:8px;border-radius:8px;background:var(--line);overflow:hidden}
