@@ -30,8 +30,8 @@ h1,h2,h3,.fx{font-family:'Baloo 2','Nunito',system-ui,sans-serif}
 :focus-visible{outline:3px solid var(--honey);outline-offset:2px}
 /* splash */
 #splash{align-items:center;justify-content:center;gap:18px;background:linear-gradient(var(--honey2),var(--card))}
-.logo{font:800 54px/0.95 'Baloo 2',sans-serif;color:var(--blue);text-align:center;letter-spacing:-1px}
-.logo span{display:block;font-size:84px;color:var(--honey);-webkit-text-stroke:2px var(--ink);paint-order:stroke fill}
+.logo{font:800 46px/1 'Baloo 2',sans-serif;color:var(--blue);text-align:center;letter-spacing:-1px}
+.logo span{display:block;font-size:56px;margin-top:6px}
 .book{font-size:64px;animation:bob 2s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-10px) rotate(-4deg)}}
 .load{width:150px;height:8px;border-radius:8px;background:var(--line);overflow:hidden}
