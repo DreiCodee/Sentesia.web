@@ -1,5 +1,5 @@
 const $=s=>document.querySelector(s),app=$('#app');
-const order=['splash','home','learn','act','result','progress','profile'];
+const order=['splash','home','learn','act','result','progress','profile','about'];
 let cur='splash';
 function go(id){
   if(id===cur)return;
@@ -12,10 +12,16 @@ function go(id){
   if(id==='progress')setTimeout(drawProgress,250);
 }
 document.addEventListener('click',e=>{
+  if(e.target.closest('[data-about]'))return openAbout();
   const g=e.target.closest('[data-go]');if(g)return go(g.dataset.go);
   const m=e.target.closest('[data-act]');if(m)start(m.dataset.act);
 });
 setTimeout(()=>go('home'),2400);
+function openAbout(){
+  const sp=$('#splash');sp.innerHTML=sp.innerHTML; /* restarts the logo animation */
+  go('splash');
+  setTimeout(()=>{if(cur==='splash')go('about')},2600);
+}
 
 /* learn slides */
 let sl=0;
