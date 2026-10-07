@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sentence Fix</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<main class="app" id="app">
+
+<section class="screen active" id="splash">
+  <div class="logo">SENTENCE<span>Fix ✏️</span></div>
+  <p class="tag">Build it. Arrange it. Fix it.</p>
+  <div class="book">📖</div>
+  <div class="load"><i></i></div><small class="tag">Loading…</small>
+</section>
+
+<section class="screen" id="home">
+  <div class="hero"><h2 class="fx">Good day, Learner!</h2><p>Let's build better sentences together!</p></div>
+  <div class="body">
+    <button class="menu m1" data-act="arrange"><div class="ic">🧩</div><div><b>Arrange It</b><small>Put the sentence elements in the right order.</small></div><span>›</span></button>
+    <button class="menu m2" data-act="fix"><div class="ic">🔄</div><div><b>Fix the Order</b><small>Correct the word order and arrangement.</small></div><span>›</span></button>
+    <button class="menu m3" data-act="build"><div class="ic">✏️</div><div><b>Build a Sentence</b><small>Create complete, correct sentences.</small></div><span>›</span></button>
+    <button class="menu m4" data-go="progress"><div class="ic">📊</div><div><b>My Progress</b><small>Track your performance and see your growth.</small></div><span>›</span></button>
+    <button class="menu" style="background:var(--blue2)" data-go="learn"><div class="ic">📖</div><div><b>Learn</b><small>Short explanations with examples.</small></div><span>›</span></button>
+  </div>
+  <nav class="nav"><button class="on" data-go="home"><span>🏠</span>Home</button><button data-go="learn"><span>📖</span>Learn</button><button data-go="progress"><span>📊</span>Progress</button><button data-go="profile"><span>🙂</span>Profile</button></nav>
+</section>
+
+<section class="screen" id="learn">
+  <div class="bar"><button class="ib" data-go="home" aria-label="Back">←</button><div class="t">Learn</div><div class="c"></div></div>
+  <div class="body">
+    <div class="slide on"><div class="panel"><h3>📘 Sentence Structure Basics</h3><p style="margin-top:6px;color:var(--soft)">A quick guide to help you build better sentences.</p></div>
+      <div class="panel"><h3><span class="num">1</span>Basic Sentence Pattern</h3><div class="ex">Subject + Verb + Object</div><div class="ex">Example: <em>The students</em> read <b>books.</b></div></div></div>
+    <div class="slide"><div class="panel"><h3><span class="num">2</span>Phrases and Clauses</h3><p style="margin-top:6px">Phrases and clauses can be placed at different parts of a sentence.</p><div class="ex">Example: In the library, the students read books.</div></div>
+      <div class="panel" style="background:var(--honey2)"><h3>💡 Remember</h3><p style="margin-top:6px">Say your sentence out loud. If it sounds odd, try moving a phrase.</p></div></div>
+    <div class="slide"><div class="panel" style="background:var(--green2)"><h3><span class="num" style="background:var(--green)">3</span>Ready to practice?</h3><p style="margin-top:6px">Arrange, fix and build sentences with fun activities.</p></div></div>
+    <div style="flex:1"></div>
+    <button class="btn" id="learnNext">Next</button>
+    <div class="dots"><i class="on"></i><i></i><i></i></div>
+  </div>
+</section>
+
+<section class="screen" id="act">
+  <div class="bar" id="actBar"><button class="ib" data-go="home" aria-label="Back">←</button><div class="t" id="actTitle"></div><div class="c" id="actCount"></div></div>
+  <div class="body" id="actBody"></div>
+</section>
+
+<section class="screen res" id="result">
+  <div class="body">
+    <div class="big">✓</div><h2 class="fx" id="rTitle">Correct!</h2>
+    <p id="rSub" style="color:var(--soft)">You arranged the sentence logically.</p>
+    <div class="ans"><small>Correct answer</small><p id="rSent"></p></div>
+    <div class="tip"><span>💡</span><div id="rTip"></div></div>
+    <button class="btn" id="rNext">Next question</button>
+    <button class="btn ghost" id="rAgain">Try another</button>
+  </div>
+</section>
+
+<section class="screen" id="progress">
+  <div class="bar g"><button class="ib" data-go="home" aria-label="Back">←</button><div class="t">My Progress</div><div class="c"></div></div>
+  <div class="body">
+    <div class="panel" style="background:var(--green2);text-align:center"><b class="fx" style="font-size:18px">Overall performance</b><div class="ring" id="ring"><div id="ringN">0%</div></div><b class="fx">Keep going!</b></div>
+    <div class="sk"><h3 class="fx">Skill breakdown</h3>
+      <div><label><span>🧩 Arranging sentence elements</span><span id="s0n"></span></label><div class="track"><i id="s0" style="background:var(--honey)"></i></div></div>
+      <div><label><span>🔄 Word order</span><span id="s1n"></span></label><div class="track"><i id="s1" style="background:var(--blue)"></i></div></div>
+      <div><label><span>✏️ Sentence construction</span><span id="s2n"></span></label><div class="track"><i id="s2" style="background:var(--lav)"></i></div></div></div>
+  </div>
+  <nav class="nav"><button data-go="home"><span>🏠</span>Home</button><button data-go="learn"><span>📖</span>Learn</button><button class="on" data-go="progress"><span>📊</span>Progress</button><button data-go="profile"><span>🙂</span>Profile</button></nav>
+</section>
+
+<section class="screen" id="profile">
+  <div class="bar"><button class="ib" data-go="home" aria-label="Back">←</button><div class="t">Profile</div><div class="c"></div></div>
+  <div class="body">
+    <div class="av">🦉</div><h2 class="fx" style="text-align:center;margin-top:-6px">Learner</h2><p style="text-align:center;color:var(--soft);margin-top:-12px">Keep building your skills!</p>
+    <button class="row" data-go="progress">📊 My Progress<span style="margin-left:auto">›</span></button>
+    <button class="row" id="theme" role="switch" aria-checked="false"><span id="thIcon">🌙</span><span id="thLabel">Dark mode</span><span class="sw"><i></i></span></button>
+    <button class="row" data-go="learn">❓ Help &amp; Support<span style="margin-left:auto">›</span></button>
+    <button class="row" data-go="splash">ℹ️ About Sentence Fix<span style="margin-left:auto">›</span></button>
+  </div>
+  <nav class="nav"><button data-go="home"><span>🏠</span>Home</button><button data-go="learn"><span>📖</span>Learn</button><button data-go="progress"><span>📊</span>Progress</button><button class="on" data-go="profile"><span>🙂</span>Profile</button></nav>
+</section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
