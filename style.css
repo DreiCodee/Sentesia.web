@@ -119,5 +119,6 @@ html.fade *{transition:background-color .45s ease,color .45s ease,border-color .
 .mem:nth-child(2){animation-delay:.08s}.mem:nth-child(3){animation-delay:.16s}.mem:nth-child(4){animation-delay:.24s}.mem:nth-child(5){animation-delay:.32s}
 .mav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 16px 'Baloo 2'}
 .mem b{font:700 17px 'Baloo 2'}
+.role{font:700 14px 'Nunito',sans-serif;color:var(--soft);white-space:nowrap}
 .made{text-align:center;color:var(--soft);font-weight:700;margin-top:4px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
