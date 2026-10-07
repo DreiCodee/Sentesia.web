@@ -108,4 +108,16 @@ textarea:focus{outline:none;border-color:var(--lav)}
 #theme.on .sw{background:var(--green)}#theme.on .sw i{transform:translateX(20px)}
 #theme span{pointer-events:none}#thLabel{flex:1}
 html.fade *{transition:background-color .45s ease,color .45s ease,border-color .45s ease!important}
+.ab1{background:var(--blue2)}.ab2{background:var(--honey2)}
+.panel p{margin-top:8px;line-height:1.5;font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.steps div{background:var(--green2);border-radius:16px;padding:10px 4px;text-align:center;display:flex;flex-direction:column;gap:2px;transition:transform .25s}
+.steps div:hover{transform:translateY(-3px)}
+.steps span{font-size:24px}.steps b{font:700 14px 'Baloo 2'}.steps small{font-size:11px;color:var(--soft);line-height:1.2}
+.team{display:flex;flex-direction:column;gap:10px}
+.mem{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:16px;padding:10px 12px;animation:in .5s ease both}
+.mem:nth-child(2){animation-delay:.08s}.mem:nth-child(3){animation-delay:.16s}.mem:nth-child(4){animation-delay:.24s}.mem:nth-child(5){animation-delay:.32s}
+.mav{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:#fff;font:700 16px 'Baloo 2'}
+.mem b{font:700 17px 'Baloo 2'}
+.made{text-align:center;color:var(--soft);font-weight:700;margin-top:4px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01s!important;transition-duration:.01s!important}}
