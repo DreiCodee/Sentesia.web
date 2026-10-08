@@ -18,8 +18,17 @@
   <div class="load"><i></i></div><small class="tag">Loading…</small>
 </section>
 
+<section class="screen cen" id="welcome">
+  <div class="wave">👋</div>
+  <h2 class="fx">Welcome to Sentensia!</h2>
+  <p class="soft">Let's get to know you. What should we call you?</p>
+  <input id="nameIn" class="nameIn" maxlength="20" placeholder="Type your name" autocomplete="given-name" aria-label="Your name">
+  <button class="btn" id="nameGo" disabled>Let's start</button>
+  <button class="btn ghost" id="nameCancel" hidden>Cancel</button>
+</section>
+
 <section class="screen" id="home">
-  <div class="hero"><h2 class="fx">Good day, Learner!</h2><p>Let's build better sentences together!</p></div>
+  <div class="hero"><h2 class="fx">Good day, <span class="pname">Learner</span>!</h2><p>Let's build better sentences together!</p></div>
   <div class="body">
     <button class="menu m1" data-act="arrange"><div class="ic">🧩</div><div><b>Arrange It</b><small>Put the sentence elements in the right order.</small></div><span>›</span></button>
     <button class="menu m2" data-act="fix"><div class="ic">🔄</div><div><b>Fix the Order</b><small>Correct the word order and arrangement.</small></div><span>›</span></button>
@@ -75,7 +84,8 @@
 <section class="screen" id="profile">
   <div class="bar"><button class="ib" data-go="home" aria-label="Back">←</button><div class="t">Profile</div><div class="c"></div></div>
   <div class="body">
-    <div class="av">🦉</div><h2 class="fx" style="text-align:center;margin-top:-6px">Learner</h2><p style="text-align:center;color:var(--soft);margin-top:-12px">Keep building your skills!</p>
+    <div class="av"><img src="um-logo.jpg" alt="University of Mindanao logo"></div><h2 class="fx pname" style="text-align:center;margin-top:-6px">Learner</h2><p style="text-align:center;color:var(--soft);margin-top:-12px">Keep building your skills!</p>
+    <button class="row" data-rename>✏️ Change name<span style="margin-left:auto">›</span></button>
     <button class="row" data-go="progress">📊 My Progress<span style="margin-left:auto">›</span></button>
     <button class="row" id="theme" role="switch" aria-checked="false"><span id="thIcon">🌙</span><span id="thLabel">Dark mode</span><span class="sw"><i></i></span></button>
     <button class="row" data-about>ℹ️ About Sentensia<span style="margin-left:auto">›</span></button>
