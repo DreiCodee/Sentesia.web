@@ -1,5 +1,5 @@
 const $=s=>document.querySelector(s),app=$('#app');
-const order=['splash','home','levels','learn','act','result','progress','profile','about','welcome'];
+const order=['splash','home','levels','premium','learn','act','result','progress','profile','about','welcome'];
 let cur='splash';
 function go(id,fwd){
   if(id===cur)return;
@@ -13,6 +13,7 @@ function go(id,fwd){
 }
 document.addEventListener('click',e=>{
   if(e.target.closest('[data-about]'))return openAbout();
+  if(e.target.closest('[data-premium]'))return openPremium();
   if(e.target.closest('[data-rename]'))return showWelcome();
   const g=e.target.closest('[data-go]');if(g)return go(g.dataset.go);
   const lv=e.target.closest('[data-lvl]');if(lv)return startLevel(lv.dataset.lvl);
@@ -73,30 +74,49 @@ const D={
   {l:'Arrange the sentence elements:',o:['after the meeting','the group members','discussed','their plans','in the classroom'],w:['the group members','discussed','their plans','in the classroom','after the meeting'],a:'The group members discussed their plans in the classroom after the meeting.',e:'Subject + verb + object come first. The place ("in the classroom") comes before the time ("after the meeting").'},
   {l:'Arrange the clauses and phrases:',w:['although she was tired','Maria','completed','her assignment','before dinner'],a:'Although she was tired, Maria completed her assignment before dinner.',e:'A clause beginning with "although" can open the sentence. Put a comma after it, then the main clause.'}]}},
  fix:{t:'Fix the Order',cls:'',tip:'Check the basic sentence pattern. Ask yourself: Who? Does what? What/whom? Then check where the additional information belongs.',
-  q:[
+  q:[],lv:{beginner:[],intermediate:[
   {g:['school','to','goes','Anna','every day'],w:['Anna','goes','to','school','every day'],a:'Anna goes to school every day.'},
   {g:['English','studying','are','students','the'],w:['the','students','are','studying','English'],a:'The students are studying English.'},
   {g:['a','bought','new','she','bag'],w:['she','bought','a','new','bag'],a:'She bought a new bag.'},
   {g:['beautiful','flowers','the','are'],w:['the','flowers','are','beautiful'],a:'The flowers are beautiful.'},
-  {g:['delicious','cooked','father','my','meal','a'],w:['my','father','cooked','a','delicious','meal'],a:'My father cooked a delicious meal.'}]},
+  {g:['delicious','cooked','father','my','meal','a'],w:['my','father','cooked','a','delicious','meal'],a:'My father cooked a delicious meal.'}],advanced:[]}},
  build:{t:'Build a Sentence',cls:'l',tip:'A complete sentence has a subject, a verb and a clear meaning. Start with a capital letter and end with a full stop.',
-  q:[
+  q:[],lv:{beginner:[],intermediate:[
   {el:['wrote','a short story','the young writer','about her dog'],a:'The young writer wrote a short story about her dog.'},
   {el:['after school','at the park','played soccer','the children'],a:'The children played soccer at the park after school.',alt:'After school, the children played soccer at the park.'},
   {el:['because it rained','stayed inside','the students','during recess'],a:'The students stayed inside during recess because it rained.',alt:'Because it rained, the students stayed inside during recess.'},
   {el:['a fresh salad','for lunch','prepared','the chef'],a:'The chef prepared a fresh salad for lunch.'},
-  {el:['before the test','reviewed','their lessons','the classmates'],a:'The classmates reviewed their lessons before the test.'}]}
+  {el:['before the test','reviewed','their lessons','the classmates'],a:'The classmates reviewed their lessons before the test.'}],advanced:[]}}
 };
-const stat={arrange:80,fix:75,build:85};
-let mode,i,ans,lvl='';
+let done=new Set();try{done=new Set(JSON.parse(localStorage.getItem('sf-done')||'[]').map(k=>k.replace(/^(fix|build)::/,'$1:intermediate:')))}catch(e){}
+const total=m=>Object.values(D[m].lv).reduce((n,a)=>n+a.length,0);
+const pct=m=>Math.round(100*[...done].filter(k=>k.startsWith(m+':')).length/total(m));
+let mode,i,ans,lvl='',levelMode='arrange';
 const fmt=a=>{const s=a.join(' ');return s[0].toUpperCase()+s.slice(1)+'.'};
 const shuffle=a=>{let b;do{b=[...a].sort(()=>Math.random()-.5)}while(b.join()===a.join()&&a.length>1);return b};
-function start(m){if(m==='arrange')return go('levels');mode=m;i=0;render();go('act')}
-function startLevel(l){const a=D.arrange.lv[l];if(!a||!a.length)return;lvl=l;D.arrange.q=a;mode='arrange';i=0;render();go('act')}
+function start(m){levelMode=m;renderLevels();go('levels')}
+const LVD={beginner:'Short, simple sentences',intermediate:'Phrases and clauses',advanced:'Clauses and longer sentences'};
+function renderLevels(){
+  const d=D[levelMode];
+  $('#lvTitle').textContent=d.t;$('#halimaw').style.display=levelMode==='arrange'?'':'none';$('#lvBar').className='bar '+d.cls;
+  document.querySelectorAll('#levels [data-lvl]').forEach(b=>{
+    const n=d.lv[b.dataset.lvl].length;
+    b.classList.toggle('locked',!n);b.setAttribute('aria-disabled',!n);
+    b.querySelector('small').textContent=n?n+' items · '+LVD[b.dataset.lvl]:'Coming soon';
+    b.lastElementChild.textContent=n?'›':'🔒';
+  });
+}
+function openPremium(){
+  $('#perks').hidden=false;$('#goPrem').hidden=false;$('#rich').hidden=true;
+  go('premium');
+}
+$('#goPrem').onclick=()=>{$('#perks').hidden=true;$('#goPrem').hidden=true;$('#rich').hidden=false};
+$('#premBack').onclick=()=>go('levels');
+function startLevel(l){const a=D[levelMode].lv[l];if(!a||!a.length)return;lvl=l;D[levelMode].q=a;mode=levelMode;i=0;render();go('act')}
 function render(){
   const d=D[mode],q=d.q[i],body=$('#actBody');
-  $('#actTitle').textContent=d.t+(mode==='arrange'&&lvl?' · '+lvl[0].toUpperCase()+lvl.slice(1):'');$('#actCount').textContent=(i+1)+'/'+d.q.length;
-  $('#actBar').className='bar '+d.cls;$('#actBar .ib').dataset.go=mode==='arrange'?'levels':'home';ans=[];
+  $('#actTitle').textContent=d.t+(lvl?' · '+lvl[0].toUpperCase()+lvl.slice(1):'');$('#actCount').textContent=(i+1)+'/'+d.q.length;
+  $('#actBar').className='bar '+d.cls;$('#actBar .ib').dataset.go='levels';ans=[];
   if(mode==='build'){
     body.innerHTML=`<p class="q">Use the given words or sentence elements to create a complete and grammatically correct sentence. Make sure that your sentence has a clear meaning and follows an appropriate sentence structure. Type your final sentence into the answer box, then tap Submit when you are finished.</p><p class="q" style="font-weight:800;color:var(--lav)">Arrange the words and type your final sentence into the answer box.</p><div class="chips">${q.el.map(w=>`<span class="chip" style="background:var(--lav2);cursor:default;pointer-events:none">${w}</span>`).join('')}</div><textarea id="ta" placeholder="Type your sentence here…"></textarea><div class="msg" id="msg"></div><button class="btn" id="chk" style="background:var(--lav)">Submit</button>`;
     const norm=t=>t.toLowerCase().replace(/[^a-z\s]/g,'').replace(/\s+/g,' ').trim();
@@ -130,25 +150,24 @@ function render(){
   $('#chk').onclick=()=>ans.map(a=>a.w).join()===q.w.join()?finish(true,q.a||fmt(q.w)):wrong();
 }
 function wrong(){
-  stat[mode]=Math.max(30,stat[mode]-3);
   const m=$('#msg');m.textContent=({build:'Check whether your sentence has a complete thought and whether its elements are arranged correctly.',arrange:'Not quite! Check how the phrases and clauses connect to the main idea and try again.',fix:'Check the basic sentence pattern. Ask yourself: Who? Does what? What/whom? Then check where the additional information belongs.'})[mode]||'Almost! Check the order and try again.';
   const t=$('#drop')||$('#ta');t.classList.remove('shake');void t.offsetWidth;t.classList.add('shake');
 }
 function finish(ok,sent){
-  stat[mode]=Math.min(100,stat[mode]+4);
+  done.add(mode+':'+lvl+':'+i);try{localStorage.setItem('sf-done',JSON.stringify([...done]))}catch(e){}
   $('#rTitle').textContent=({arrange:'Correct!',fix:'Excellent!',build:'Excellent!'})[mode]||'Well done!';
   $('#rSub').textContent=({arrange:'Great job! You arranged the sentence elements logically.',fix:'The words are arranged in an appropriate order.',build:'You constructed a complete and grammatically correct sentence.'})[mode]||'The correct sentence is:';
   $('#rSent').textContent=sent;$('#rTip').textContent=D[mode].q[i].e||D[mode].tip;
   const last=i===D[mode].q.length-1;
-  $('#rNext').textContent=last?(mode==='arrange'?'Choose a level':'Back to home'):'Next question';
+  $('#rNext').textContent=last?'Choose a level':'Next question';
   go('result');
 }
-$('#rNext').onclick=()=>{if(i<D[mode].q.length-1){i++;render();go('act')}else go(mode==='arrange'?'levels':'home')};
+$('#rNext').onclick=()=>{if(i<D[mode].q.length-1){i++;render();go('act')}else go('levels')};
 $('#rAgain').onclick=()=>{i=(i+1)%D[mode].q.length;render();go('act')};
 
 /* progress */
 function drawProgress(){
-  const v=[stat.arrange,stat.fix,stat.build],avg=Math.round(v.reduce((a,b)=>a+b)/3);
+  const v=['arrange','fix','build'].map(pct),avg=Math.round(v.reduce((a,b)=>a+b)/3);
   $('#ring').style.setProperty('--p',avg);$('#ringN').textContent=avg+'%';
   v.forEach((x,k)=>{$('#s'+k).style.width=x+'%';$('#s'+k+'n').textContent=x+'%'});
 }
