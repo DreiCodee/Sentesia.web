@@ -1,10 +1,10 @@
 const $=s=>document.querySelector(s),app=$('#app');
-const order=['splash','home','learn','act','result','progress','profile','about'];
+const order=['splash','home','learn','act','result','progress','profile','about','welcome'];
 let cur='splash';
-function go(id){
+function go(id,fwd){
   if(id===cur)return;
   const a=$('#'+cur),b=$('#'+id);
-  app.classList.toggle('back',order.indexOf(id)<order.indexOf(cur)&&id!=='splash');
+  app.classList.toggle('back',!fwd&&order.indexOf(id)<order.indexOf(cur)&&id!=='splash');
   a.classList.remove('active');a.classList.add('left');
   requestAnimationFrame(()=>{b.classList.remove('left');b.classList.add('active')});
   setTimeout(()=>a.classList.remove('left'),500);
@@ -13,10 +13,22 @@ function go(id){
 }
 document.addEventListener('click',e=>{
   if(e.target.closest('[data-about]'))return openAbout();
+  if(e.target.closest('[data-rename]'))return showWelcome();
   const g=e.target.closest('[data-go]');if(g)return go(g.dataset.go);
   const m=e.target.closest('[data-act]');if(m)start(m.dataset.act);
 });
-setTimeout(()=>go('home'),2400);
+/* name */
+let userName='';try{userName=localStorage.getItem('sf-name')||''}catch(e){}
+const setName=n=>document.querySelectorAll('.pname').forEach(x=>x.textContent=n);
+if(userName)setName(userName);
+const nIn=$('#nameIn'),nGo=$('#nameGo'),nCancel=$('#nameCancel');
+function showWelcome(){nIn.value=userName;nGo.disabled=!userName;nCancel.hidden=!userName;go('welcome',true);setTimeout(()=>nIn.focus({preventScroll:true}),600)}
+function saveName(){const v=nIn.value.trim().replace(/\s+/g,' ');if(!v)return;userName=v;setName(v);try{localStorage.setItem('sf-name',v)}catch(e){}nIn.blur();go('home',true)}
+nIn.oninput=()=>{nGo.disabled=!nIn.value.trim()};
+nIn.onkeydown=e=>{if(e.key==='Enter')saveName()};
+nGo.onclick=saveName;
+nCancel.onclick=()=>go('profile');
+setTimeout(()=>userName?go('home'):showWelcome(),2400);
 function openAbout(){
   const sp=$('#splash');sp.innerHTML=sp.innerHTML; /* restarts the logo animation */
   go('splash');
