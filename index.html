@@ -59,13 +59,25 @@
 </section>
 
 <section class="screen" id="levels">
-  <div class="bar"><button class="ib" data-go="home" aria-label="Back">←</button><div class="t">Arrange It</div><div class="c"></div></div>
+  <div class="bar" id="lvBar"><button class="ib" data-go="home" aria-label="Back">←</button><div class="t" id="lvTitle">Arrange It</div><div class="c"></div></div>
   <div class="body">
     <p class="q">Choose your level</p>
     <button class="menu m4" data-lvl="beginner"><div class="ic">🌱</div><div><b>Beginner</b><small>5 items · Short, simple sentences</small></div><span>›</span></button>
     <button class="menu m1" data-lvl="intermediate"><div class="ic">🌿</div><div><b>Intermediate</b><small>5 items · Phrases and clauses</small></div><span>›</span></button>
     <button class="menu m3" data-lvl="advanced"><div class="ic">🌳</div><div><b>Advanced</b><small>5 items · Clauses and longer sentences</small></div><span>›</span></button>
+    <button class="menu mh" id="halimaw" data-premium><div class="ic">👹</div><div><b>Halimaw Mode <span class="pro">PREMIUM</span></b><small>For the real sentence monsters</small></div><span>👑</span></button>
   </div>
+</section>
+
+<section class="screen cen prem" id="premium">
+  <div class="crown">👑</div>
+  <span class="ribbon">PREMIUM</span>
+  <h2 class="fx">Halimaw Mode</h2>
+  <p class="soft">Unlock the ultimate sentence challenge. Only for true sentence monsters!</p>
+  <ul class="perks" id="perks"><li>👹 Monster-level sentences</li><li>⚡ Zero mercy, zero hints</li><li>🏆 Bragging rights forever</li></ul>
+  <div class="rich" id="rich" hidden>RICH YARN??</div>
+  <button class="btn gold" id="goPrem">Go Premium</button>
+  <button class="btn ghost" id="premBack">Back</button>
 </section>
 
 <section class="screen" id="act">
