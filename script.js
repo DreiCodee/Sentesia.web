@@ -1,5 +1,5 @@
 const $=s=>document.querySelector(s),app=$('#app');
-const order=['splash','home','learn','act','result','progress','profile','about','welcome'];
+const order=['splash','home','levels','learn','act','result','progress','profile','about','welcome'];
 let cur='splash';
 function go(id,fwd){
   if(id===cur)return;
@@ -15,6 +15,7 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-about]'))return openAbout();
   if(e.target.closest('[data-rename]'))return showWelcome();
   const g=e.target.closest('[data-go]');if(g)return go(g.dataset.go);
+  const lv=e.target.closest('[data-lvl]');if(lv)return startLevel(lv.dataset.lvl);
   const m=e.target.closest('[data-act]');if(m)start(m.dataset.act);
 });
 /* name + gender */
@@ -55,12 +56,22 @@ $('#learnNext').onclick=()=>{
 /* activities */
 const D={
  arrange:{t:'Arrange It',cls:'h',tip:'In English, the basic sentence order is Subject + Verb + Object. Extra phrases can go at the end.',
-  q:[
+  q:[],lv:{beginner:[
+  {o:['school','to','walks','Maria','every day'],w:['Maria','walks','to','school','every day'],a:'Maria walks to school every day.',e:'Start with who (Maria), then what she does (walks), then where (to school) and when (every day).'},
+  {o:['the students','books','read','every afternoon'],w:['the students','read','books','every afternoon'],a:'The students read books every afternoon.',e:'Subject + verb + object come first. Time words like "every afternoon" usually go at the end.'},
+  {o:['in the classroom','the teacher','works'],w:['the teacher','works','in the classroom'],a:'The teacher works in the classroom.',e:'Subject + verb come first. Then the place phrase "in the classroom".'},
+  {o:['a letter','wrote','Ana','yesterday'],w:['Ana','wrote','a letter','yesterday'],a:'Ana wrote a letter yesterday.',e:'Who? Ana. Did what? Wrote. What? A letter. When? Yesterday.'},
+  {o:['the children','outside','played'],w:['the children','played','outside'],a:'The children played outside.',e:'Subject + verb come first. "Outside" tells where they played.'}],intermediate:[
   {w:['the students','stayed inside','during recess','because it was raining'],a:'The students stayed inside during recess because it was raining.',e:'The main clause comes first. The clause "because it was raining" explains the reason, so it follows.'},
   {w:['the teacher','talked to the parents','in the faculty room','after the meeting'],a:'The teacher talked to the parents in the faculty room after the meeting.',e:'Subject + verb phrase come first. Then the place ("in the faculty room"), then the time ("after the meeting").'},
   {w:['although he was tired','Mark','continued studying','for the examination'],a:'Although he was tired, Mark continued studying for the examination.',e:'A clause beginning with "although" can open the sentence. Put a comma after it, then the main clause.'},
   {w:['when the bell rang','the students','left the classroom','immediately'],a:'When the bell rang, the students left the classroom immediately.',e:'"When the bell rang" sets the time, so it goes first with a comma. The main clause follows.'},
-  {w:['the student','who won the competition','received a certificate','from the principal'],a:'The student who won the competition received a certificate from the principal.',e:'"Who won the competition" describes "the student", so it must come right after it.'}]},
+  {w:['the student','who won the competition','received a certificate','from the principal'],a:'The student who won the competition received a certificate from the principal.',e:'"Who won the competition" describes "the student", so it must come right after it.'}],advanced:[
+  {l:'Arrange the sentence elements:',o:['because it was raining','the students','stayed','inside'],w:['the students','stayed','inside','because it was raining'],a:'The students stayed inside because it was raining.',e:'The main clause comes first. The clause "because it was raining" gives the reason, so it follows.'},
+  {l:'Arrange the sentence elements:',o:['in the school library','the students','quietly','studied','their lessons'],w:['the students','quietly','studied','their lessons','in the school library'],a:'The students quietly studied their lessons in the school library.',e:'Subject first, then "quietly" before the verb, then the object. The place phrase goes at the end.'},
+  {l:'Arrange the clauses:',o:['when the teacher arrived','the students','prepared','their materials'],w:['the students','prepared','their materials','when the teacher arrived'],a:'The students prepared their materials when the teacher arrived.',e:'The main clause comes first. The "when" clause tells the time, so it follows.'},
+  {l:'Arrange the sentence elements:',o:['after the meeting','the group members','discussed','their plans','in the classroom'],w:['the group members','discussed','their plans','in the classroom','after the meeting'],a:'The group members discussed their plans in the classroom after the meeting.',e:'Subject + verb + object come first. The place ("in the classroom") comes before the time ("after the meeting").'},
+  {l:'Arrange the clauses and phrases:',w:['although she was tired','Maria','completed','her assignment','before dinner'],a:'Although she was tired, Maria completed her assignment before dinner.',e:'A clause beginning with "although" can open the sentence. Put a comma after it, then the main clause.'}]}},
  fix:{t:'Fix the Order',cls:'',tip:'Check the basic sentence pattern. Ask yourself: Who? Does what? What/whom? Then check where the additional information belongs.',
   q:[
   {g:['school','to','goes','Anna','every day'],w:['Anna','goes','to','school','every day'],a:'Anna goes to school every day.'},
@@ -77,14 +88,15 @@ const D={
   {el:['before the test','reviewed','their lessons','the classmates'],a:'The classmates reviewed their lessons before the test.'}]}
 };
 const stat={arrange:80,fix:75,build:85};
-let mode,i,ans;
+let mode,i,ans,lvl='';
 const fmt=a=>{const s=a.join(' ');return s[0].toUpperCase()+s.slice(1)+'.'};
 const shuffle=a=>{let b;do{b=[...a].sort(()=>Math.random()-.5)}while(b.join()===a.join()&&a.length>1);return b};
-function start(m){mode=m;i=0;render();go('act')}
+function start(m){if(m==='arrange')return go('levels');mode=m;i=0;render();go('act')}
+function startLevel(l){const a=D.arrange.lv[l];if(!a||!a.length)return;lvl=l;D.arrange.q=a;mode='arrange';i=0;render();go('act')}
 function render(){
   const d=D[mode],q=d.q[i],body=$('#actBody');
-  $('#actTitle').textContent=d.t;$('#actCount').textContent=(i+1)+'/'+d.q.length;
-  $('#actBar').className='bar '+d.cls;ans=[];
+  $('#actTitle').textContent=d.t+(mode==='arrange'&&lvl?' · '+lvl[0].toUpperCase()+lvl.slice(1):'');$('#actCount').textContent=(i+1)+'/'+d.q.length;
+  $('#actBar').className='bar '+d.cls;$('#actBar .ib').dataset.go=mode==='arrange'?'levels':'home';ans=[];
   if(mode==='build'){
     body.innerHTML=`<p class="q">Use the given words or sentence elements to create a complete and grammatically correct sentence. Make sure that your sentence has a clear meaning and follows an appropriate sentence structure. Type your final sentence into the answer box, then tap Submit when you are finished.</p><p class="q" style="font-weight:800;color:var(--lav)">Arrange the words and type your final sentence into the answer box.</p><div class="chips">${q.el.map(w=>`<span class="chip" style="background:var(--lav2);cursor:default;pointer-events:none">${w}</span>`).join('')}</div><textarea id="ta" placeholder="Type your sentence here…"></textarea><div class="msg" id="msg"></div><button class="btn" id="chk" style="background:var(--lav)">Submit</button>`;
     const norm=t=>t.toLowerCase().replace(/[^a-z\s]/g,'').replace(/\s+/g,' ').trim();
@@ -93,8 +105,8 @@ function render(){
       [q.a,q.alt].filter(Boolean).some(x=>norm(x)===t)?finish(true,q.a+(q.alt?'\nAlso correct: '+q.alt:'')):wrong();
     };return;
   }
-  const words=q.g||shuffle(q.w);
-  body.innerHTML=`${q.g?`<p class="q">Each item contains words that are not in the appropriate order. Rearrange the words to form a grammatically appropriate English sentence. Tap Check when you are finished.</p><p class="q" style="font-weight:800;color:var(--blue)">Re-arrange the words:</p><div class="wrong">${i+1}. ${q.g.join(' / ')}</div>`:`<p class="q">Read the sentence elements carefully. Drag or select the phrases and clauses to arrange them in the most logical order. Then tap Check.</p><p class="q" style="font-weight:800;color:var(--blue)">Arrange the sentence elements correctly:</p>`}
+  const words=q.g||q.o||shuffle(q.w);
+  body.innerHTML=`${q.g?`<p class="q">Each item contains words that are not in the appropriate order. Rearrange the words to form a grammatically appropriate English sentence. Tap Check when you are finished.</p><p class="q" style="font-weight:800;color:var(--blue)">Re-arrange the words:</p><div class="wrong">${i+1}. ${q.g.join(' / ')}</div>`:`<p class="q">${lvl==='beginner'?'Tap or drag the words to make a correct sentence. Then tap Check.':'Read the sentence elements carefully. Drag or select the phrases and clauses to arrange them in the most logical order. Then tap Check.'}</p><p class="q" style="font-weight:800;color:var(--blue)">${q.l||(lvl==='beginner'?'Arrange the words:':'Arrange the sentence elements correctly:')}</p>`}
   <div class="chips" id="pool">${words.map((w,k)=>`<button class="chip" draggable="true" data-k="${k}">${w}</button>`).join('')}</div>
   <div class="drop" id="drop"><span class="hint">Tap the words here</span></div><div class="msg" id="msg"></div>
   <button class="btn" id="chk" disabled>Check</button>`;
@@ -128,10 +140,10 @@ function finish(ok,sent){
   $('#rSub').textContent=({arrange:'Great job! You arranged the sentence elements logically.',fix:'The words are arranged in an appropriate order.',build:'You constructed a complete and grammatically correct sentence.'})[mode]||'The correct sentence is:';
   $('#rSent').textContent=sent;$('#rTip').textContent=D[mode].q[i].e||D[mode].tip;
   const last=i===D[mode].q.length-1;
-  $('#rNext').textContent=last?'Back to home':'Next question';
+  $('#rNext').textContent=last?(mode==='arrange'?'Choose a level':'Back to home'):'Next question';
   go('result');
 }
-$('#rNext').onclick=()=>{if(i<D[mode].q.length-1){i++;render();go('act')}else go('home')};
+$('#rNext').onclick=()=>{if(i<D[mode].q.length-1){i++;render();go('act')}else go(mode==='arrange'?'levels':'home')};
 $('#rAgain').onclick=()=>{i=(i+1)%D[mode].q.length;render();go('act')};
 
 /* progress */
